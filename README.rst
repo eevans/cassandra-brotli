@@ -13,6 +13,8 @@ compression and decompression speeds are roughly unchanged when compared to
 This module provides Brotli compression of persisted data for
 `Apache Cassandra`_.
 
+.. contents:: Table of Contents
+
 Current Status
 --------------
 *Works-for-me* (read: experimental).
