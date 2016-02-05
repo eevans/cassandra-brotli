@@ -1,0 +1,11 @@
+language: java
+
+jdk:
+  # Ideally this would use openjdk8, but no such option exists at this time.
+  - oraclejdk8
+
+notifications:
+  email:
+    - services@wikimedia.org
+
+sudo: false
