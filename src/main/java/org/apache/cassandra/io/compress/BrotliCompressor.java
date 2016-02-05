@@ -77,7 +77,7 @@ public class BrotliCompressor implements ICompressor {
         Brotli.Parameter parms = getDefaultBrotliParameter();
 
         if (options.containsKey("mode")) {
-            parms.setMode(Brotli.Mode.valueOf(options.get("mode")));
+            parms.setMode(Brotli.Mode.valueOf(options.get("mode").toUpperCase()));
         }
 
         if (options.containsKey("quality")) {
