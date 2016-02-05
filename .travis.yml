@@ -8,4 +8,6 @@ notifications:
   email:
     - services@wikimedia.org
 
-sudo: false
+# We need a new libstdc++ than Ubuntu 12.04 LTS Server offers.
+sudo: required
+dist: trusty
