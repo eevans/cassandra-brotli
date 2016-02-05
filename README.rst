@@ -2,6 +2,9 @@
 cassandra-brotli
 ================
 
+.. image:: https://travis-ci.org/eevans/cassandra-brotli.svg?branch=master
+               :target: https://travis-ci.org/eevans/cassandra-brotli
+
 Brotli is an open source data compression library developed by Jyrki Alakuijala
 and Zoltán Szabadka [#]_. It is based on a modern variant of the LZ77 algorithm,
 Huffman coding and 2nd order context modeling.
