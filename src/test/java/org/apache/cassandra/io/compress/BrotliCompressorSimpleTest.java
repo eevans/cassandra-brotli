@@ -24,7 +24,9 @@ public class BrotliCompressorSimpleTest {
         BrotliCompressor compressor = BrotliCompressor.create(Collections.emptyMap());
 
         compressor.compress(input, compressed);
+        compressed.flip();
         compressor.uncompress(compressed, decompressed);
+        decompressed.flip();
 
         byte[] decompressedBytes = new byte[decompressed.limit()];
         decompressed.get(decompressedBytes);

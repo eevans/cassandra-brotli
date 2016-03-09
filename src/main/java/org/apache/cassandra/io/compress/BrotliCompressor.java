@@ -61,11 +61,15 @@ public class BrotliCompressor implements ICompressor {
     @Override
     public void compress(ByteBuffer in, ByteBuffer out) throws IOException {
         this.compressor.compress(this.brotliParam, in, out);
+        // Cassandra wants to flip the output buffer, but jbrotli has already flipped it.
+        out.position(out.remaining());
     }
 
     @Override
     public void uncompress(ByteBuffer in, ByteBuffer out) throws IOException {
         this.decompressor.deCompress(in, out);
+        // Cassandra wants to flip the output buffer, but jbrotli has already flipped it.
+        out.position(out.remaining());
     }
 
     @Override

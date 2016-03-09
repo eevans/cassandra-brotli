@@ -98,9 +98,11 @@ public class BrotliCompressorTest {
 
         // Compress
         compressor.compress(input, compressed);
+        compressed.flip();
 
         // De-compress
         compressor.uncompress(compressed, decompressed);
+        decompressed.flip();
 
         HashFunction hf = Hashing.md5();
         HashCode inputHash = hf.hashBytes(test);
