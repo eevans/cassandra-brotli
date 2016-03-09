@@ -3,6 +3,7 @@ package org.apache.cassandra.io.compress;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,15 +53,29 @@ public class BrotliCompressor implements ICompressor {
     }
 
     @Override
-    public int compress(byte[] input, int inputOffset, int inputLength, WrappedArray output, int outputOffset)
-            throws IOException {
-        return compressor.compress(this.brotliParam, input, inputOffset, inputLength, output.buffer, outputOffset, output.buffer.length);
-    }
-
-    @Override
     public int uncompress(byte[] input, int inputOffset, int inputLength, byte[] output, int outputOffset)
             throws IOException {
         return decompressor.deCompress(input, inputOffset, inputLength, output, outputOffset, output.length);
+    }
+
+    @Override
+    public void compress(ByteBuffer in, ByteBuffer out) throws IOException {
+        this.compressor.compress(this.brotliParam, in, out);
+    }
+
+    @Override
+    public void uncompress(ByteBuffer in, ByteBuffer out) throws IOException {
+        this.decompressor.deCompress(in, out);
+    }
+
+    @Override
+    public BufferType preferredBufferType() {
+        return BufferType.OFF_HEAP;
+    }
+
+    @Override
+    public boolean supports(BufferType bufferType) {
+        return true;
     }
 
     @Override

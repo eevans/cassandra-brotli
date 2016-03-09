@@ -7,11 +7,11 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cassandra.io.compress.ICompressor.WrappedArray;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -86,24 +86,31 @@ public class BrotliCompressorTest {
     @Test
     public void testLarge() throws IOException {
         File f = new File(getClass().getResource("/" + this.file).getPath());
-        byte[] input = Files.toByteArray(f);
-        byte[] compressed = new byte[input.length];
-        byte[] decompressed = new byte[input.length];
+        byte[] test = Files.toByteArray(f);
+        ByteBuffer input = ByteBuffer.allocateDirect(test.length);
+        ByteBuffer compressed = ByteBuffer.allocateDirect(test.length);
+        ByteBuffer decompressed = ByteBuffer.allocateDirect(test.length);
+
+        // Write test data to buffer and flip to make ready for read.
+        input.put(test).flip();
 
         BrotliCompressor compressor = BrotliCompressor.create(this.options);
 
         // Compress
-        int compressedLen = compressor.compress(input, 0, input.length, new WrappedArray(compressed), 0);
+        compressor.compress(input, compressed);
 
         // De-compress
-        compressor.uncompress(compressed, 0, compressedLen, decompressed, 0);
+        compressor.uncompress(compressed, decompressed);
 
         HashFunction hf = Hashing.md5();
-        HashCode inputHash = hf.hashBytes(input);
-        HashCode decompressedHash = hf.hashBytes(decompressed);
+        HashCode inputHash = hf.hashBytes(test);
+        byte[] decompressedBytes = new byte[decompressed.limit()];
+        decompressed.get(decompressedBytes);
+        HashCode decompressedHash = hf.hashBytes(decompressedBytes);
 
         // Compare hash of input data to result of a round-trip through the compressor.
         assertThat(decompressedHash, is(equalTo(inputHash)));
+
     }
 
 }
